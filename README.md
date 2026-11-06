@@ -4,7 +4,7 @@ Controlador os-ken 3.1.1 con OpenFlow 1.3. La topologia fisica,
 DPID, puertos y direcciones de `topology/campus.py` no se modificaron.
 El estado anterior esta en `controller/campus_controller_r2.py.bak`.
 
-## Diseno para la sustentacion
+## Diseño para la sustentacion
 
 - **Tabla 0:** conserva R2. Acepta tramas sin etiqueta en accesos,
   agrega la VLAN del puerto y admite solo VLAN autorizadas en troncales.
