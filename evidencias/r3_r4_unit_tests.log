@@ -1,0 +1,21 @@
+/home/sdnadmin/campus-sdn/.venv/lib/python3.12/site-packages/os_ken/lib/hub.py:160: EventletDeprecationWarning: 
+Eventlet is deprecated. It is currently being maintained in bugfix mode, and
+we strongly recommend against using it for new projects.
+
+If you are already using Eventlet, we recommend migrating to a different
+framework.  For more detail see
+https://eventlet.readthedocs.io/en/latest/asyncio/migration.html
+
+  import eventlet
+test_access_switches_have_no_routing_or_acl (test_controller.ControllerTests.test_access_switches_have_no_routing_or_acl) ... ok
+test_acl_matrix (test_controller.ControllerTests.test_acl_matrix) ... ok
+test_all_messages_serialize_and_tables_drop_by_default (test_controller.ControllerTests.test_all_messages_serialize_and_tables_drop_by_default) ... ok
+test_dynamic_gateway_arp (test_controller.ControllerTests.test_dynamic_gateway_arp) ... ok
+test_r2_rules_preserved_against_backup (test_controller.ControllerTests.test_r2_rules_preserved_against_backup) ... ok
+test_routing_actions_and_hairpin (test_controller.ControllerTests.test_routing_actions_and_hairpin) ... ok
+test_unexpected_packet_in_does_not_get_a_reply (test_controller.ControllerTests.test_unexpected_packet_in_does_not_get_a_reply) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.040s
+
+OK

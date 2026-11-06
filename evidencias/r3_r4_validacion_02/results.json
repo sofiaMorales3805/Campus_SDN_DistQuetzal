@@ -1,0 +1,417 @@
+[
+  {
+    "test": "s1: sin NORMAL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "s2: sin NORMAL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "s2: solo capa 2",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "s3: sin NORMAL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "s3: solo capa 2",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "ACL instaladas antes del trafico",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "s1-eth1: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "s1-eth2: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "s2-eth1: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "s2-eth2: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "s2-eth3: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "s3-eth1: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "s3-eth2: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "s3-eth3: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "s3-eth4: sin tag/trunks OVS",
+    "passed": true,
+    "detail": "[]\n[]"
+  },
+  {
+    "test": "Capturadores activos",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h1: limpiar ARP dinamico",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h2: limpiar ARP dinamico",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h3: limpiar ARP dinamico",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h4: limpiar ARP dinamico",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "srv: limpiar ARP dinamico",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "ICMP h1->h2",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.10.12 (10.0.10.12) 56(84) bytes of data.\n64 bytes from 10.0.10.12: icmp_seq=1 ttl=64 time=1.52 ms\n\n--- 10.0.10.12 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 1.519/1.519/1.519/0.000 ms"
+  },
+  {
+    "test": "ICMP h1->h3",
+    "passed": true,
+    "detail": "esperado=denegar; PING 10.0.20.21 (10.0.20.21) 56(84) bytes of data.\n\n--- 10.0.20.21 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "ICMP h1->h4",
+    "passed": true,
+    "detail": "esperado=denegar; PING 10.0.20.22 (10.0.20.22) 56(84) bytes of data.\n\n--- 10.0.20.22 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "ICMP h1->srv",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.30.10 (10.0.30.10) 56(84) bytes of data.\n64 bytes from 10.0.30.10: icmp_seq=1 ttl=63 time=4.07 ms\n\n--- 10.0.30.10 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 4.070/4.070/4.070/0.000 ms"
+  },
+  {
+    "test": "ICMP h2->h1",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.10.11 (10.0.10.11) 56(84) bytes of data.\n64 bytes from 10.0.10.11: icmp_seq=1 ttl=64 time=0.048 ms\n\n--- 10.0.10.11 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.048/0.048/0.048/0.000 ms"
+  },
+  {
+    "test": "ICMP h2->h3",
+    "passed": true,
+    "detail": "esperado=denegar; PING 10.0.20.21 (10.0.20.21) 56(84) bytes of data.\n\n--- 10.0.20.21 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "ICMP h2->h4",
+    "passed": true,
+    "detail": "esperado=denegar; PING 10.0.20.22 (10.0.20.22) 56(84) bytes of data.\n\n--- 10.0.20.22 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "ICMP h2->srv",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.30.10 (10.0.30.10) 56(84) bytes of data.\n64 bytes from 10.0.30.10: icmp_seq=1 ttl=63 time=0.557 ms\n\n--- 10.0.30.10 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.557/0.557/0.557/0.000 ms"
+  },
+  {
+    "test": "ICMP h3->h1",
+    "passed": true,
+    "detail": "esperado=denegar; PING 10.0.10.11 (10.0.10.11) 56(84) bytes of data.\n\n--- 10.0.10.11 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "ICMP h3->h2",
+    "passed": true,
+    "detail": "esperado=denegar; PING 10.0.10.12 (10.0.10.12) 56(84) bytes of data.\n\n--- 10.0.10.12 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "ICMP h3->h4",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.20.22 (10.0.20.22) 56(84) bytes of data.\n64 bytes from 10.0.20.22: icmp_seq=1 ttl=64 time=0.505 ms\n\n--- 10.0.20.22 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.505/0.505/0.505/0.000 ms"
+  },
+  {
+    "test": "ICMP h3->srv",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.30.10 (10.0.30.10) 56(84) bytes of data.\n64 bytes from 10.0.30.10: icmp_seq=1 ttl=63 time=0.352 ms\n\n--- 10.0.30.10 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.352/0.352/0.352/0.000 ms"
+  },
+  {
+    "test": "ICMP h4->h1",
+    "passed": true,
+    "detail": "esperado=denegar; PING 10.0.10.11 (10.0.10.11) 56(84) bytes of data.\n\n--- 10.0.10.11 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "ICMP h4->h2",
+    "passed": true,
+    "detail": "esperado=denegar; PING 10.0.10.12 (10.0.10.12) 56(84) bytes of data.\n\n--- 10.0.10.12 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "ICMP h4->h3",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.20.21 (10.0.20.21) 56(84) bytes of data.\n64 bytes from 10.0.20.21: icmp_seq=1 ttl=64 time=0.076 ms\n\n--- 10.0.20.21 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.076/0.076/0.076/0.000 ms"
+  },
+  {
+    "test": "ICMP h4->srv",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.30.10 (10.0.30.10) 56(84) bytes of data.\n64 bytes from 10.0.30.10: icmp_seq=1 ttl=63 time=0.277 ms\n\n--- 10.0.30.10 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.277/0.277/0.277/0.000 ms"
+  },
+  {
+    "test": "ICMP srv->h1",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.10.11 (10.0.10.11) 56(84) bytes of data.\n64 bytes from 10.0.10.11: icmp_seq=1 ttl=63 time=0.039 ms\n\n--- 10.0.10.11 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.039/0.039/0.039/0.000 ms"
+  },
+  {
+    "test": "ICMP srv->h2",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.10.12 (10.0.10.12) 56(84) bytes of data.\n64 bytes from 10.0.10.12: icmp_seq=1 ttl=63 time=0.051 ms\n\n--- 10.0.10.12 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.051/0.051/0.051/0.000 ms"
+  },
+  {
+    "test": "ICMP srv->h3",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.20.21 (10.0.20.21) 56(84) bytes of data.\n64 bytes from 10.0.20.21: icmp_seq=1 ttl=63 time=0.040 ms\n\n--- 10.0.20.21 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.040/0.040/0.040/0.000 ms"
+  },
+  {
+    "test": "ICMP srv->h4",
+    "passed": true,
+    "detail": "esperado=permitir; PING 10.0.20.22 (10.0.20.22) 56(84) bytes of data.\n64 bytes from 10.0.20.22: icmp_seq=1 ttl=63 time=0.075 ms\n\n--- 10.0.20.22 ping statistics ---\n1 packets transmitted, 1 received, 0% packet loss, time 0ms\nrtt min/avg/max/mdev = 0.075/0.075/0.075/0.000 ms"
+  },
+  {
+    "test": "h1: ARP gateway dinamico",
+    "passed": true,
+    "detail": "10.0.10.1 dev h1-eth0 lladdr 02:00:00:00:00:01 REACHABLE \n10.0.10.12 dev h1-eth0 lladdr 00:00:00:00:10:12 REACHABLE"
+  },
+  {
+    "test": "h2: ARP gateway dinamico",
+    "passed": true,
+    "detail": "10.0.10.11 dev h2-eth0 lladdr 00:00:00:00:10:11 REACHABLE \n10.0.10.1 dev h2-eth0 lladdr 02:00:00:00:00:01 REACHABLE"
+  },
+  {
+    "test": "h3: ARP gateway dinamico",
+    "passed": true,
+    "detail": "10.0.20.22 dev h3-eth0 lladdr 00:00:00:00:20:22 REACHABLE \n10.0.20.1 dev h3-eth0 lladdr 02:00:00:00:00:01 REACHABLE"
+  },
+  {
+    "test": "h4: ARP gateway dinamico",
+    "passed": true,
+    "detail": "10.0.20.21 dev h4-eth0 lladdr 00:00:00:00:20:21 DELAY \n10.0.20.1 dev h4-eth0 lladdr 02:00:00:00:00:01 REACHABLE"
+  },
+  {
+    "test": "srv: ARP gateway dinamico",
+    "passed": true,
+    "detail": "10.0.30.1 dev srv-eth0 lladdr 02:00:00:00:00:01 REACHABLE"
+  },
+  {
+    "test": "HTTP h1->srv:80",
+    "passed": true,
+    "detail": "<h1>Portal interno - Distribuidora Quetzal</h1>"
+  },
+  {
+    "test": "HTTP h1->srv:8080",
+    "passed": true,
+    "detail": "curl: (28) Failed to connect to 10.0.30.10 port 8080 after 1001 ms: Timeout was reached"
+  },
+  {
+    "test": "HTTP h2->srv:80",
+    "passed": true,
+    "detail": "<h1>Portal interno - Distribuidora Quetzal</h1>"
+  },
+  {
+    "test": "HTTP h2->srv:8080",
+    "passed": true,
+    "detail": "curl: (28) Failed to connect to 10.0.30.10 port 8080 after 1001 ms: Timeout was reached"
+  },
+  {
+    "test": "HTTP h3->srv:80",
+    "passed": true,
+    "detail": "<h1>Portal interno - Distribuidora Quetzal</h1>"
+  },
+  {
+    "test": "HTTP h3->srv:8080",
+    "passed": true,
+    "detail": "<h1>Panel de administracion</h1>"
+  },
+  {
+    "test": "HTTP h4->srv:80",
+    "passed": true,
+    "detail": "<h1>Portal interno - Distribuidora Quetzal</h1>"
+  },
+  {
+    "test": "HTTP h4->srv:8080",
+    "passed": true,
+    "detail": "<h1>Panel de administracion</h1>"
+  },
+  {
+    "test": "HTTP srv->srv:80",
+    "passed": true,
+    "detail": "<h1>Portal interno - Distribuidora Quetzal</h1>"
+  },
+  {
+    "test": "HTTP srv->srv:8080",
+    "passed": true,
+    "detail": "<h1>Panel de administracion</h1>"
+  },
+  {
+    "test": "UDP h1->srv",
+    "passed": true,
+    "detail": "TIMEOUT"
+  },
+  {
+    "test": "UDP h2->srv",
+    "passed": true,
+    "detail": "TIMEOUT"
+  },
+  {
+    "test": "UDP h3->srv",
+    "passed": true,
+    "detail": "campus-udp"
+  },
+  {
+    "test": "UDP h4->srv",
+    "passed": true,
+    "detail": "campus-udp"
+  },
+  {
+    "test": "Denegados sin PacketIn",
+    "passed": true,
+    "detail": "PacketIn ARP antes=5, despues=5"
+  },
+  {
+    "test": "Denegados incrementan contadores drop",
+    "passed": true,
+    "detail": "antes=12, despues=18"
+  },
+  {
+    "test": "Emision broadcast de prueba",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "TTL=1 no llega al destino",
+    "passed": true,
+    "detail": "PING 10.0.30.10 (10.0.30.10) 56(84) bytes of data.\n\n--- 10.0.30.10 ping statistics ---\n1 packets transmitted, 0 received, 100% packet loss, time 0ms"
+  },
+  {
+    "test": "h1: acceso sin etiquetas",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h1: aislamiento broadcast VLAN10",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h2: acceso sin etiquetas",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h2: aislamiento broadcast VLAN10",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h3: acceso sin etiquetas",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h3: aislamiento broadcast VLAN10",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h4: acceso sin etiquetas",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h4: aislamiento broadcast VLAN10",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "srv: acceso sin etiquetas",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "srv: aislamiento broadcast VLAN10",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "trunk_s2: datos siempre etiquetados",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "trunk_s3: datos siempre etiquetados",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "h1->srv: TTL 64->63, MAC y VLAN de destino",
+    "passed": true,
+    "detail": "ingreso=2, egreso=2, recibido=2"
+  },
+  {
+    "test": "h2->srv: TTL 64->63, MAC y VLAN de destino",
+    "passed": true,
+    "detail": "ingreso=2, egreso=2, recibido=2"
+  },
+  {
+    "test": "h3->srv: TTL 64->63, MAC y VLAN de destino",
+    "passed": true,
+    "detail": "ingreso=2, egreso=2, recibido=2"
+  },
+  {
+    "test": "h4->srv: TTL 64->63, MAC y VLAN de destino",
+    "passed": true,
+    "detail": "ingreso=2, egreso=2, recibido=2"
+  },
+  {
+    "test": "TTL=1 descartado antes de srv",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "PCAP original intacto: r2_acceso_h1.pcap",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "PCAP original intacto: r2_troncal_s1_s2.pcap",
+    "passed": true,
+    "detail": ""
+  }
+]

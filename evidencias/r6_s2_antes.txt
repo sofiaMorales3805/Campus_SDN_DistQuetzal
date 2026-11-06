@@ -1,0 +1,19 @@
+OFPST_FLOW reply (OF1.3) (xid=0x2):
+ cookie=0x0, duration=198.339s, table=0, n_packets=18, n_bytes=1400, priority=200,in_port=2,vlan_tci=0x0000/0x1fff actions=push_vlan:0x8100,set_field:4106->vlan_vid,goto_table:1
+ cookie=0x0, duration=198.339s, table=0, n_packets=10, n_bytes=796, priority=200,in_port=3,vlan_tci=0x0000/0x1fff actions=push_vlan:0x8100,set_field:4116->vlan_vid,goto_table:1
+ cookie=0x0, duration=198.339s, table=0, n_packets=7, n_bytes=560, priority=200,in_port=1,dl_vlan=10 actions=goto_table:1
+ cookie=0x0, duration=198.338s, table=0, n_packets=0, n_bytes=0, priority=200,in_port=1,dl_vlan=20 actions=goto_table:1
+ cookie=0x0, duration=198.339s, table=0, n_packets=8, n_bytes=600, priority=0 actions=drop
+ cookie=0x0, duration=198.338s, table=1, n_packets=7, n_bytes=560, priority=100,dl_vlan=10,dl_dst=00:00:00:00:10:11 actions=pop_vlan,output:2
+ cookie=0x0, duration=198.338s, table=1, n_packets=3, n_bytes=238, priority=100,dl_vlan=10,dl_dst=00:00:00:00:10:12 actions=output:1
+ cookie=0x0, duration=198.338s, table=1, n_packets=0, n_bytes=0, priority=100,dl_vlan=20,dl_dst=00:00:00:00:20:21 actions=pop_vlan,output:3
+ cookie=0x0, duration=198.338s, table=1, n_packets=0, n_bytes=0, priority=100,dl_vlan=20,dl_dst=00:00:00:00:20:22 actions=output:1
+ cookie=0x0, duration=198.336s, table=1, n_packets=4, n_bytes=392, priority=200,dl_vlan=10,dl_dst=02:00:00:00:00:01 actions=output:1
+ cookie=0x0, duration=198.336s, table=1, n_packets=0, n_bytes=0, priority=200,dl_vlan=20,dl_dst=02:00:00:00:00:01 actions=output:1
+ cookie=0x0, duration=198.338s, table=1, n_packets=0, n_bytes=0, priority=90,in_port=1,dl_vlan=10,dl_dst=ff:ff:ff:ff:ff:ff actions=pop_vlan,output:2
+ cookie=0x0, duration=198.338s, table=1, n_packets=2, n_bytes=84, priority=90,in_port=2,dl_vlan=10,dl_dst=ff:ff:ff:ff:ff:ff actions=output:1
+ cookie=0x0, duration=198.338s, table=1, n_packets=0, n_bytes=0, priority=90,in_port=1,dl_vlan=20,dl_dst=ff:ff:ff:ff:ff:ff actions=pop_vlan,output:3
+ cookie=0x0, duration=198.336s, table=1, n_packets=0, n_bytes=0, priority=90,in_port=3,dl_vlan=20,dl_dst=ff:ff:ff:ff:ff:ff actions=output:1
+ cookie=0x0, duration=198.339s, table=1, n_packets=19, n_bytes=1482, priority=0 actions=drop
+ cookie=0x0, duration=198.339s, table=2, n_packets=0, n_bytes=0, priority=0 actions=drop
+ cookie=0x0, duration=198.339s, table=3, n_packets=0, n_bytes=0, priority=0 actions=drop
