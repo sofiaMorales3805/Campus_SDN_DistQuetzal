@@ -1,111 +1,75 @@
-# Campus SDN: R2, R3 y R4
+# Campus SDN — Distribuidora Quetzal
 
-Controlador os-ken 3.1.1 con OpenFlow 1.3. La topologia fisica,
-DPID, puertos y direcciones de `topology/campus.py` no se modificaron.
-El estado anterior esta en `controller/campus_controller_r2.py.bak`.
+Proyecto individual de Telecomunicaciones: requisitos **R1–R6** implementados en Mininet / Open vSwitch con **os-ken 3.1.1**, **OpenFlow 1.3** y canal de control TCP **6653**.
 
-## Diseño para la sustentacion
+## Requisitos
 
-- **Tabla 0:** conserva R2. Acepta tramas sin etiqueta en accesos,
-  agrega la VLAN del puerto y admite solo VLAN autorizadas en troncales.
-- **Tabla 1:** conserva unicast y broadcast R2. s2/s3 transportan la
-  MAC virtual hacia s1, sin decidir rutas IP. En s1, solo los hosts del
-  inventario, con IP, MAC, VLAN y troncal de origen coherentes, pueden
-  enviar IPv4 a la MAC del gateway. Esos paquetes pasan a la tabla 2.
-  Las solicitudes ARP validas para el gateway se envian al controlador.
-- **Tabla 2, solo s1:** ACL IPv4 proactivas por VLAN de origen y
-  subred de destino. Las excepciones permitidas tienen prioridad 200;
-  las denegaciones explicitas, prioridad 100. El resto se descarta.
-- **Tabla 3, solo s1:** rutas hacia los cinco hosts del inventario.
-  Cada ruta decrementa TTL, cambia ambas MAC, cambia la VLAN a la de
-  destino y sale por la troncal correspondiente.
+Entorno validado: Ubuntu Server 24.04.5 LTS, Python 3.12, Mininet 2.3.0, Open vSwitch 3.3.9 y os-ken 3.1.1. Se requieren Git, Python 3 con `venv`, Mininet, Open vSwitch, `tcpdump`, `curl`, `ip` y `sudo`. El Python del sistema debe poder importar `mininet`.
 
-Cuando origen y destino estan en el mismo switch de acceso, s1 debe
-devolver la trama por su troncal de entrada. OpenFlow no permite hacerlo
-con `output:<numero_fisico_de_entrada>`: suprime esa salida. Por eso se
-utiliza la salida estandar `OFPP_IN_PORT`. s2/s3 reciben la nueva VLAN
-y entregan la trama sin etiqueta al host de destino.
+## Instalación desde GitHub
 
-Los gateways `10.0.10.1`, `10.0.20.1` y `10.0.30.1` responden ARP con
-`02:00:00:00:00:01`. El controlador responde desde s1 con una trama
-802.1Q; el switch de acceso retira la etiqueta. No se instalan vecinos
-ARP estaticos en los hosts. Las MAC de destino del router provienen del
-inventario fijo del enunciado, no de entradas estaticas en los hosts.
-No se implementa ping al propio gateway: su servicio requerido es ARP.
-
-No se usa `NORMAL`, routers Linux, IP forwarding, configuracion
-`tag/trunks` de OVS, reglas manuales `ovs-ofctl` ni controladores Ryu.
-`ovs-ofctl` se utiliza exclusivamente para consultar reglas.
-Las reglas no tienen expiracion. En una reconexion, el controlador
-reemplaza las reglas anteriores del switch Campus; no debe compartirse
-con otros controladores sobre esos mismos switches.
-
-## Politica R4
-
-| Origen | Ventas (10) | Contabilidad (20) | Servidores (30) |
-|---|---|---|---|
-| Ventas (10) | L2 permitido | Denegado | ICMP y TCP destino 80 |
-| Contabilidad (20) | Denegado | L2 permitido | IPv4 permitido |
-| Servidores (30) | ICMP y TCP origen 80 | IPv4 permitido | L2 permitido |
-
-**Limitacion aceptada explicitamente:** la ACL HTTP es sin estado.
-OpenFlow 1.3 estandar no permite demostrar que un paquete TCP con
-origen 80 responde a una conexion previa. Esta regla tambien permite
-trafico iniciado por un servidor que utilice ese puerto de origen.
-No se afirma que exista un firewall con seguimiento de conexiones.
-No se emplean extensiones conntrack de OVS ni aperturas reactivas.
-
-Los paquetes denegados se descartan en s1, no se envian al controlador.
-Un host puede necesitar resolver primero su gateway mediante ARP;
-ese PacketIn es independiente del descarte posterior del trafico IP.
-Solo las solicitudes ARP de gateways autorizadas generan PacketIn.
-IPv6 y destinos de ruteo fuera del inventario no estan habilitados.
-
-## Ejecucion interactiva: dos terminales
-
-Primero cerrar cualquier Campus anterior: `exit` en su CLI Mininet y
-Ctrl+C en su controlador. No iniciar dos topologias con los mismos
-nombres de interfaces. No ejecutar limpiezas globales sobre redes ajenas.
-
-Terminal 1:
+Desde cualquier carpeta de trabajo en Ubuntu:
 
 ```bash
-cd /home/sdnadmin/campus-sdn
+git clone https://github.com/sofiaMorales3805/Campus_SDN_DistQuetzal.git
+cd Campus_SDN_DistQuetzal
+python3 -m venv .venv
+.venv/bin/python -m pip install 'os-ken==3.1.1'
+.venv/bin/python -c "import importlib.metadata as m; print(m.version('os-ken'))"
+```
+
+La última instrucción debe imprimir `3.1.1`. Mininet se utiliza desde el Python del sistema; compruebe con `/usr/bin/python3 -c 'import mininet'`. La carpeta `.venv` no se incluye en GitHub. **Todas las instrucciones posteriores se ejecutan desde la raíz del repositorio clonado**; en cada terminal nueva, navegue primero hasta esa carpeta.
+
+## Arranque — dos terminales
+
+Antes de arrancar, cerrar una topología previa con `exit` en `mininet>` y detener el controlador anterior con Ctrl+C. No lanzar dos controladores a la vez sobre el puerto 6653. Si existen restos de una ejecución propia, `sudo mn -c` puede limpiarlos, pero no debe ejecutarse cuando existan otras redes Mininet que preservar.
+
+**Terminal 1 — controlador:**
+
+```bash
 .venv/bin/osken-manager --ofp-tcp-listen-port 6653 controller/campus_controller.py
 ```
 
-Terminal 2:
+**Terminal 2 — topología interactiva:**
 
 ```bash
-cd /home/sdnadmin/campus-sdn
 sudo /usr/bin/python3 topology/campus.py
 ```
 
-Esperar las confirmaciones `Reglas R2/R3/R4 confirmadas` de los tres
-switches antes de generar trafico. Los errores OpenFlow se registran
-explicitamente en el controlador y deben corregirse antes de probar.
+Esperar el prompt `mininet>` y las confirmaciones `Reglas R2/R3/R4 confirmadas` para s1, s2 y s3 en la terminal del controlador. La topología configura las rutas por defecto e inicia automáticamente el portal HTTP/80 y el panel HTTP/8080 en `srv`.
 
-La topologia existente inicia automaticamente HTTP/80 desde
-`/tmp/srv_www` y HTTP/8080 desde `/tmp/srv_admin`. No fue necesario
-modificarla. Comandos en la CLI Mininet:
+Desde Mininet:
 
 ```text
-h1 ping -c 2 10.0.10.12
-h3 ping -c 2 10.0.20.22
-h1 ping -c 2 10.0.30.10
-h2 ping -c 2 10.0.30.10
-h4 ping -c 2 10.0.30.10
-h1 ping -c 2 10.0.20.21
-h1 curl --noproxy '*' -fsS --max-time 3 http://10.0.30.10/
+sh ovs-vsctl show
+h1 ping -c 2 h2
+h3 ping -c 2 h4
+h1 ping -c 2 srv
+h4 ping -c 2 srv
+h1 ping -c 2 h3
+h1 curl --noproxy '*' -fsS --max-time 3 http://10.0.30.10:80/
 h1 curl --noproxy '*' -fsS --max-time 3 http://10.0.30.10:8080/
 h3 curl --noproxy '*' -fsS --max-time 3 http://10.0.30.10:8080/
 h1 ip neigh show
 ```
 
-El ping Ventas -> Contabilidad y el curl Ventas -> 8080 deben fallar.
-Los demas comandos anteriores deben alcanzar sus destinos.
+Resultados esperados: s1/s2/s3 con `is_connected: true` y `fail_mode: secure`; comunicación L2 dentro de la misma VLAN con TTL 64; h1→srv con TTL 63; Ventas→Contabilidad denegado; portal /80 permitido para Ventas, panel /8080 denegado para Ventas y permitido para Contabilidad. El gateway ARP resuelve la MAC `02:00:00:00:00:01`. h4 y srv están en s3, pero en distintas VLAN: la ruta pasa por s1 y retorna por la misma troncal gracias a `OFPP_IN_PORT`.
 
-Consultas desde otra terminal, sin instalar reglas:
+## Arquitectura y restricciones
+
+- **s1 (DPID 1):** núcleo L3, ACL y reescritura de TTL/MAC/VLAN. **s2 (DPID 2)** y **s3 (DPID 3):** solo conmutación L2.
+- **VLAN 10:** h1 10.0.10.11 y h2 10.0.10.12; gateway 10.0.10.1.
+- **VLAN 20:** h3 10.0.20.21 y h4 10.0.20.22; gateway 10.0.20.1.
+- **VLAN 30:** srv 10.0.30.10; gateway 10.0.30.1.
+- **Tabla 0:** acceso/troncal y etiquetas 802.1Q. **Tabla 1:** L2, validación de origen y solicitudes ARP de gateway. **Tabla 2 (s1):** ACL proactivas. **Tabla 3 (s1):** rutas proactivas y `dec_ttl` / `set_field`.
+- El controlador envía los `FLOW_MOD` en `EventOFPSwitchFeatures`, descarta tráfico no autorizado en el switch y confirma procesamiento con `BARRIER_REPLY`. Para responder ARP de gateways autorizados utiliza `Packet-In` y `Packet-Out`.
+- No se usan acción `NORMAL`, atributos OVS `tag/trunks`, routers Linux, IP forwarding en hosts ni `ovs-ofctl add-flow`.
+
+La ACL para respuestas HTTP es **sin estado**: permite TCP con puerto de origen 80 desde Servidores hacia Ventas, pero no comprueba pertenencia a una sesión previa. **X1** (VLAN invitados con meters de 2 Mbps) y **X2** (respuesta ICMP del gateway) son opcionales y **no están implementados**. La topología dispone de `--invitados` como posibilidad de escenario, pero el controlador publicado no implementa X1: no se debe usar como demostración funcional.
+
+## Inspección y pruebas automatizadas
+
+En Mininet, anteponer `sh` a los comandos del sistema; en Bash Ubuntu, utilizar `sudo` y omitir `sh`.
 
 ```bash
 sudo ovs-ofctl -O OpenFlow13 dump-flows s1
@@ -114,111 +78,49 @@ sudo ovs-ofctl -O OpenFlow13 dump-flows s3
 sudo ovs-vsctl get Port s1-eth1 tag trunks
 ```
 
-## Validacion reproducible
-
-Pruebas sin privilegios:
+Para las pruebas unitarias:
 
 ```bash
-cd /home/sdnadmin/campus-sdn
-.venv/bin/python -m py_compile controller/campus_controller.py tests/test_controller.py tests/verify_network.py
 .venv/bin/python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-Prueba real automatizada: mantener el controlador de la terminal 1
-en 6653 y **cerrar la topologia interactiva**. En la terminal 2:
+Para las pruebas reales automatizadas: detener y cerrar primero la topología interactiva, pero mantener os-ken ejecutándose en otra terminal. El verificador inicia su propia topología y crea una carpeta de resultados **nueva**:
 
 ```bash
-cd /home/sdnadmin/campus-sdn
-sudo /usr/bin/python3 tests/verify_network.py \
-  --output "/home/sdnadmin/campus-sdn/evidencias/r3_r4_$(date +%Y%m%d_%H%M%S)"
+sudo /usr/bin/python3 tests/verify_network.py --output "evidencias/r3_r4_$(date +%Y%m%d_%H%M%S)"
 ```
 
-La prueba usa `CampusTopo`, las rutas y los servicios originales.
-Se niega a crear la red si existen s1, s2 o s3. El directorio de salida
-debe ser nuevo. Al terminar detiene solamente la topologia, servicios
-y capturadores de esa ejecucion; no detiene el controlador externo.
+**Resultados realmente obtenidos:** 7/7 pruebas unitarias correctas y **83/83 comprobaciones reales correctas**, sin fallos. Evidencia: `evidencias/r3_r4_validacion_02/results.json`, reglas y archivos PCAP de la misma carpeta. Se comprobaron conectividad, VLAN, ARP, ACL, HTTP, UDP, TTL, reescritura MAC/VLAN y descarte local (contador drop: 12→18; Packet-In ARP: 5→5).
 
-Comprueba:
+## Recuperación R6 — solamente en laboratorio
 
-- Reglas proactivas antes del trafico, sin NORMAL ni VLAN OVS.
-- Las 20 parejas dirigidas ICMP de los cinco hosts.
-- ARP dinamico para los cinco hosts y los tres gateways.
-- HTTP/80 y HTTP/8080 desde cada host, validando contenido o timeout.
-- UDP de Ventas denegado y de Contabilidad permitido.
-- Descartes R4 con contadores crecientes, sin nuevos PacketIn.
-- Broadcast de prueba recibido solo dentro de VLAN 10.
-- Accesos sin etiquetas y troncales con 802.1Q.
-- TTL 64 -> 63, MAC de gateway, MAC destino y VLAN 30 para las
-  cuatro rutas hacia srv, incluidas las de retorno por la misma troncal.
-- TTL 1 descartado antes de srv.
-- Integridad SHA-256 de los PCAP originales.
-
-Guarda `results.json`, reglas antes/despues, capturas nuevas y logs
-tcpdump. No abre los PCAP anteriores para escritura. Un fallo de
-asercion devuelve codigo 1; errores de infraestructura abortan con
-excepcion y no deben interpretarse como una ejecucion completa.
-Unicamente un resumen final sin fallos acredita la prueba completa.
-
-## Resultados realmente obtenidos en esta entrega
-
-| Comprobacion | Resultado |
-|---|---|
-| Version instalada de os-ken | 3.1.1 |
-| Sintaxis del controlador y pruebas con Python | Correcta |
-| Sintaxis con Pylance del controlador y prueba de red | Sin errores |
-| Pruebas unitarias | 7/7 correctas |
-| Reglas R2 frente al respaldo, tablas 0/1 | Identicas byte a byte en s1/s2/s3 |
-| Serializacion de FlowMod y PacketOut OF1.3 | Correcta en pruebas unitarias |
-| ACL, rutas, hairpin y ARP de los cinco hosts | Verificados con datapath simulado |
-| Arranque real del controlador en puerto libre 6654 | Correcto, PID temporal 23293 |
-| Conexion TCP y saludo OpenFlow 1.3 | Recibido `040000084163711f` |
-| Controlador temporal | Detenido al finalizar la comprobacion |
-| Pruebas reales de trafico Mininet/OVS | **PENDIENTES, no ejecutadas** |
-
-No se puede declarar R3/R4 operativos en la red hasta ejecutar la
-validacion Mininet. En las comprobaciones realizadas seguian activos
-el controlador anterior PID 19798 en 6653 y Mininet PID 19990.
-`sudo -n /usr/bin/python3` devolvio `sudo: a password is required`.
-No se detuvieron ni se reconfiguraron esas sesiones. El arranque en
-6654 no se conecto a los switches y no acredita reenvio real.
-
-Logs reales: `evidencias/r3_r4_unit_tests.log` y
-`evidencias/r3_r4_controller_startup.log`. El aviso EventletDeprecated
-procede de una dependencia existente de os-ken; no impidio el arranque.
-Tambien se registro `1 RLock(s) were not greened`. No se modifico el
-arranque de os-ken para ocultarlo; se verificaron escucha y saludo,
-pero su efecto durante una sesion con trafico no se ha evaluado.
-No se instalaron dependencias.
-
-### Integridad preservada
-
-```text
-controller/campus_controller_r2.py.bak
-24f0817bd9485e15eebdef0b264dd44d5498ec05b8d69854ea4ef965c3af03d0
-
-evidencias/r2_acceso_h1.pcap
-cc33073b66ad2e869a1363e758261db63ed9704bfc5697cd9d6059bf0d17c213
-
-evidencias/r2_troncal_s1_s2.pcap
-f9b77d1b534ef6231fb20a4d0868e0bbf2f1aecca8bf3b5f19d975550f9a1d3f
-```
-
-### Comandos de comprobacion ejecutados
-
-Ademas de leer los archivos y comprobar procesos/puertos:
+1. Mantener Mininet ejecutándose y comprobar los pings antes del procedimiento.
+2. Detener os-ken (Ctrl+C en Terminal 1).
+3. En una terminal Bash Ubuntu, **solo con el controlador detenido**, ejecutar:
 
 ```bash
-cp -p -n controller/campus_controller.py controller/campus_controller_r2.py.bak
-sha256sum controller/campus_controller.py controller/campus_controller_r2.py.bak
-.venv/bin/python -c "import importlib.metadata; print('os-ken', importlib.metadata.version('os-ken'))"
-.venv/bin/python -m py_compile controller/campus_controller.py tests/test_controller.py tests/verify_network.py
-.venv/bin/python -m unittest discover -s tests -p 'test_*.py' -v 2>&1 | tee evidencias/r3_r4_unit_tests.log
-.venv/bin/osken-manager --ofp-tcp-listen-port 6654 controller/campus_controller.py > evidencias/r3_r4_controller_startup.log 2>&1
-.venv/bin/python -c "import socket; s=socket.create_connection(('127.0.0.1',6654),timeout=3); data=s.recv(8); print('OpenFlow hello:',data.hex()); assert data[0]==4 and data[1]==0; s.close()"
-ss -ltnp 'sport = :6654'
-sudo -n /usr/bin/python3 tests/verify_network.py --output /home/sdnadmin/campus-sdn/evidencias/r3_r4_network_20261106
-sha256sum controller/campus_controller_r2.py.bak evidencias/r2_acceso_h1.pcap evidencias/r2_troncal_s1_s2.pcap
+sudo ovs-ofctl -O OpenFlow13 del-flows s1
+sudo ovs-ofctl -O OpenFlow13 del-flows s2
+sudo ovs-ofctl -O OpenFlow13 del-flows s3
+sudo ovs-ofctl -O OpenFlow13 dump-flows s1
 ```
 
-El comando `sudo -n` de red fallo antes de ejecutar el script. No
-existen capturas ni resultados de red R3/R4 de esa invocacion.
+4. Comprobar tablas vacías; reiniciar os-ken con el comando original; esperar las confirmaciones de los tres switches.
+5. Repetir h1→h2, h1→srv, h1→h3 y HTTP/80. Los resultados registrados fueron 2/2, 2/2, 0/2 y portal disponible, respectivamente.
+
+El uso de `del-flows` se limita a simular borrado durante R6; **nunca se agregan flujos manualmente**. Evidencias: `evidencias/r6_s1_antes.txt`, `r6_s1_despues.txt` y equivalentes de s2 y s3.
+
+## Evidencias para la entrega
+
+- `evidencias/r2_troncal_s1_s2.pcap`: troncal con etiquetas IEEE 802.1Q **VLAN 10 y VLAN 20**.
+- `evidencias/r2_acceso_h1.pcap`: tráfico de acceso sin etiqueta.
+- `evidencias/openflow_control_6653.pcap`: captura de control OpenFlow TCP/6653 (179 paquetes): **6 HELLO, 3 FEATURES_REQUEST, 3 FEATURES_REPLY, 102 FLOW_MOD, 3 BARRIER_REQUEST y 3 BARRIER_REPLY**.
+- `evidencias/r3_r4_validacion_02/results.json`: detalle de 83 comprobaciones.
+- `evidencias/r3_r4_validacion_02/trunk_s2.pcap`, `trunk_s3.pcap` y `srv.pcap`: evidencia de reenvío, TTL y VLAN.
+- `evidencias/r6_s*_antes.txt` y `r6_s*_despues.txt`: reglas antes/después del reinicio.
+
+Abrir los PCAP con Wireshark; filtros útiles: `vlan.id == 10`, `vlan.id == 20`, `openflow_v4.type == 14` para FLOW_MOD y `openflow_v4.type == 20 || openflow_v4.type == 21` para BARRIER. El informe técnico describe el significado de las capturas.
+
+## Cierre
+
+Para cerrar Mininet escribir `exit` en `mininet>`, detener el controlador con Ctrl+C y usar `sudo mn -c` solo si quedan recursos residuales propios. No alterar reglas manualmente fuera del procedimiento R6.
